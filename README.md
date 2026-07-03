@@ -1,37 +1,139 @@
-# Odoo
+# EIT Odoo Platform 2026 — Research_Odoo19
 
-[![Build Status](https://runbot.odoo.com/runbot/badge/flat/1/master.svg)](https://runbot.odoo.com/runbot)
-[![Tech Doc](https://img.shields.io/badge/master-docs-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/documentation/master)
-[![Help](https://img.shields.io/badge/master-help-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/forum/help-1)
-[![Nightly Builds](https://img.shields.io/badge/master-nightly-875A7B.svg?style=flat&colorA=8F8F8F)](https://nightly.odoo.com/)
+Dự án tùy biến trên nền tảng **Odoo 19 Community**, phục vụ quản lý quy trình giao nhận đồ án tốt nghiệp cho sinh viên ngành Công nghệ Thông tin.
 
-Odoo is a suite of web based open source business apps.
+Repo này chứa **Odoo 19 core đầy đủ** + module custom `delivery_management` do nhóm phát triển.
 
-The main Odoo Apps include an [Open Source CRM](https://www.odoo.com/page/crm),
-[Website Builder](https://www.odoo.com/app/website),
-[eCommerce](https://www.odoo.com/app/ecommerce),
-[Warehouse Management](https://www.odoo.com/app/inventory),
-[Project Management](https://www.odoo.com/app/project),
-[Billing &amp; Accounting](https://www.odoo.com/app/accounting),
-[Point of Sale](https://www.odoo.com/app/point-of-sale-shop),
-[Human Resources](https://www.odoo.com/app/employees),
-[Marketing](https://www.odoo.com/app/social-marketing),
-[Manufacturing](https://www.odoo.com/app/manufacturing),
-[...](https://www.odoo.com/)
+---
 
-Odoo Apps can be used as stand-alone applications, but they also integrate seamlessly so you get
-a full-featured [Open Source ERP](https://www.odoo.com) when you install several Apps.
+## 1. Giới thiệu
 
-## Getting started with Odoo
+| | |
+|---|---|
+| **Nền tảng** | Odoo 19.0 Community |
+| **Module custom** | `delivery_management` |
+| **Chức năng chính** | Quản lý đề tài đồ án (`thesis.topic`), phân công hướng dẫn (`thesis.assignment`), theo dõi tiến độ giao nhận (`delivery.tracking`), thống kê & báo cáo (`delivery.report`, `delivery.statistics`) |
+| **Ngôn ngữ** | Python 3.11+, XML (views), PostgreSQL |
 
-For a standard installation please follow the [Setup instructions](https://www.odoo.com/documentation/master/administration/install/install.html)
-from the documentation.
+---
 
-To learn the software, we recommend the [Odoo eLearning](https://www.odoo.com/slides),
-or [Scale-up, the business game](https://www.odoo.com/page/scale-up-business-game).
-Developers can start with [the developer tutorials](https://www.odoo.com/documentation/master/developer/howtos.html).
+## 2. Cấu trúc thư mục
 
-## Security
+```
+Research_Odoo19/
+├── odoo/                    # Odoo 19 core
+├── addons/                  # Addons chuẩn đi kèm Odoo
+├── delivery_management/     # Module custom của nhóm (quản lý đồ án tốt nghiệp)
+│   ├── models/
+│   ├── views/
+│   ├── security/
+│   ├── data/
+│   └── __manifest__.py
+├── debian/
+├── doc/
+├── setup/
+└── odoo.conf                # File cấu hình chạy local (KHÔNG commit thông tin nhạy cảm)
+```
 
-If you believe you have found a security issue, check our [Responsible Disclosure page](https://www.odoo.com/security-report)
-for details and get in touch with us via email.
+---
+
+## 3. Yêu cầu môi trường
+
+- Python 3.11+
+- PostgreSQL 14+ (đang dùng cổng `5433` trong cấu hình mẫu)
+- pip, virtualenv (khuyến khích dùng venv riêng, không commit vào repo)
+
+---
+
+## 4. Cài đặt lần đầu
+
+### 4.1. Clone repo
+
+```bash
+git clone https://github.com/Thenamgh/Research_Odoo19.git
+cd Research_Odoo19
+```
+
+### 4.2. Cài dependencies Python
+
+```bash
+pip install -r odoo/requirements.txt
+```
+
+### 4.3. Tạo file cấu hình `odoo.conf`
+
+Tạo file `odoo.conf` ở thư mục gốc (file này **không** được commit lên Git vì chứa thông tin nhạy cảm — xem mục 6). Nội dung mẫu:
+
+```ini
+[options]
+admin_passwd = <mật khẩu admin đã mã hóa hoặc để plain khi test local>
+db_host = localhost
+db_port = 5433
+db_user = odoo
+db_password = odoo
+db_name = graduation_project_db
+dbfilter = ^graduation_project_db$
+addons_path = <đường-dẫn-tuyệt-đối-tới-project>/odoo/addons,<đường-dẫn-tuyệt-đối-tới-project>/addons,<đường-dẫn-tuyệt-đối-tới-project>
+http_interface = 127.0.0.1
+```
+
+**Quan trọng:** `addons_path` phải trỏ đến **thư mục cha chứa module** (thư mục gốc project), **không trỏ thẳng vào** `delivery_management` — Odoo sẽ tự quét các thư mục con để tìm `__manifest__.py`.
+
+### 4.4. Khởi tạo database và cài module
+
+```bash
+python odoo-bin -c odoo.conf -i delivery_management -d graduation_project_db
+```
+
+---
+
+## 5. Quy trình chạy hằng ngày
+
+**Chạy server bình thường:**
+
+```bash
+python odoo-bin -c odoo.conf -d graduation_project_db
+```
+
+**Sau khi pull code mới có thay đổi model/view/security:**
+
+```bash
+python odoo-bin -c odoo.conf -u delivery_management -d graduation_project_db --stop-after-init
+python odoo-bin -c odoo.conf -d graduation_project_db
+```
+
+**Sau khi pull code chỉ thay đổi logic Python thuần** (không đổi model/view): chỉ cần restart server, không bắt buộc `-u`.
+
+Xem chi tiết quy trình Git hằng ngày (branch, commit, PR) tại tài liệu workflow riêng của nhóm.
+
+---
+
+## 6. Lưu ý bảo mật — KHÔNG commit các thông tin sau
+
+- File `odoo.conf` thật (chứa mật khẩu DB, admin_passwd) — chỉ commit file `odoo.conf.example` nếu cần chia sẻ mẫu
+- Thư mục `filestore/`, `sessions/` (dữ liệu người dùng thật)
+- File `.venv/`, `venv/`, `__pycache__/`
+- Dữ liệu sinh viên thật dùng để test (nên dùng dữ liệu giả lập)
+
+Các mục này đã được khai báo trong `.gitignore`.
+
+---
+
+## 7. Sự cố thường gặp
+
+| Vấn đề | Nguyên nhân | Cách xử lý |
+|---|---|---|
+| `KeyError: 'thesis.project'` / `404 Not Found` khi gọi model | `addons_path` sai, hoặc module chưa cài trên DB đang dùng | Kiểm tra `addons_path` trỏ đúng thư mục gốc chứa `delivery_management`; chạy lại `-u delivery_management` |
+| `module delivery_management: not installable, skipped` | `addons_path` trỏ thẳng vào thư mục module thay vì thư mục cha | Sửa `addons_path` bỏ phần `/delivery_management` ở cuối |
+| Module bị kẹt ở trạng thái "Upgrading" | Update bị ngắt giữa chừng (đóng terminal khi đang chạy `-u`) | Chạy lại `-u delivery_management --stop-after-init`, đợi chạy xong hẳn mới đóng terminal |
+| Field mới không hiện trên UI | Chưa update module sau khi đổi model | Chạy `-u delivery_management` |
+| Push code lên GitHub bị nặng/ngắt kết nối | Lịch sử Git quá lớn hoặc mạng không ổn định | Dọn lịch sử Git (xóa `.git` cũ, tạo lại commit sạch), tăng `http.postBuffer` trước khi push |
+
+---
+
+## 8. Team
+
+Dự án được phát triển bởi nhóm **EIT Odoo Platform 2026**, Khoa Công nghệ Thông tin.
+
+- Repo: [`Research_Odoo19`](https://github.com/Thenamgh/Research_Odoo19)
+- Quy trình làm việc chi tiết: xem file hướng dẫn workflow riêng của nhóm.
