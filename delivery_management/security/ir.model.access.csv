@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_delivery_management_user,delivery.management.user,model_delivery_management,,1,1,1,0
+access_delivery_management_manager,delivery.management.manager,model_delivery_management,base.group_user,1,1,1,1
+access_delivery_line_user,delivery.line.user,model_delivery_line,,1,1,1,0
+access_delivery_line_manager,delivery.line.manager,model_delivery_line,base.group_user,1,1,1,1
+access_delivery_receiver_user,delivery.receiver.user,model_delivery_receiver,,1,1,1,0
+access_delivery_receiver_manager,delivery.receiver.manager,model_delivery_receiver,base.group_user,1,1,1,1
+access_thesis_project_user,thesis.project.user,model_thesis_project,,1,1,1,0
+access_thesis_project_manager,thesis.project.manager,model_thesis_project,base.group_user,1,1,1,1

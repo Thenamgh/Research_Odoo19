@@ -1,0 +1,22 @@
+﻿# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Odoo runtime data
+filestore/
+sessions/
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Node
+node_modules/
+
+# OS
+Thumbs.db
