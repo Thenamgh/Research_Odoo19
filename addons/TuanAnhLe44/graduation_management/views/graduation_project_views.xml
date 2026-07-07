@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- List View -->
+    <record id="view_graduation_project_list" model="ir.ui.view">
+        <field name="name">graduation.project.list</field>
+        <field name="model">graduation.project</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_graduation_project_form" model="ir.ui.view">
+        <field name="name">graduation.project.form</field>
+        <field name="model">graduation.project</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_graduation_project" model="ir.actions.act_window">
+        <field name="name">Đồ án tốt nghiệp</field>
+        <field name="res_model">graduation.project</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu chính -->
+    <menuitem
+        id="menu_graduation_root"
+        name="Quản lý đồ án tốt nghiệp"
+        sequence="10"/>
+
+    <!-- Menu con -->
+    <menuitem
+        id="menu_graduation_project"
+        name="Đồ án"
+        parent="menu_graduation_root"
+        action="action_graduation_project"
+        sequence="1"/>
+
+</odoo>
