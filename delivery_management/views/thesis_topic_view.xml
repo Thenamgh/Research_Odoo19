@@ -8,7 +8,7 @@
             <field name="name">thesis.topic.tree</field>
             <field name="model">thesis.topic</field>
             <field name="arch" type="xml">
-                <tree string="Danh Sách Đề Tài">
+                <list string="Danh Sách Đề Tài">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="advisor_id"/>
@@ -16,7 +16,7 @@
                     <field name="assigned_count"/>
                     <field name="available_slots"/>
                     <field name="state"/>
-                </tree>
+                </list>
             </field>
         </record>
         
@@ -29,10 +29,10 @@
                     <header>
                         <button name="action_close_topic" string="Đóng Đề Tài" 
                             type="object" class="btn-danger" 
-                            states="available"/>
+                            invisible="state != 'available'"/>
                         <button name="action_reopen_topic" string="Mở Lại" 
                             type="object" class="btn-primary" 
-                            states="closed"/>
+                            invisible="state != 'closed'"/>
                         <field name="state" widget="statusbar" options="{'clickable': True}"/>
                     </header>
                     <sheet>
@@ -59,13 +59,13 @@
                         <notebook>
                             <page string="Sinh Viên Nhận">
                                 <field name="assignment_ids">
-                                    <tree string="Danh Sách Giao Nhận" editable="bottom">
+                                    <list string="Danh Sách Giao Nhận" editable="bottom">
                                         <field name="student_id"/>
                                         <field name="student_code"/>
                                         <field name="assigned_date"/>
                                         <field name="assigned_by"/>
                                         <field name="state"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -75,36 +75,33 @@
         </record>
         
         <!-- Search View -->
-        <record id="thesis_topic_search" model="ir.ui.view">
-            <field name="name">thesis.topic.search</field>
-            <field name="model">thesis.topic</field>
-            <field name="arch" type="xml">
-                <search string="Tìm Đề Tài">
-                    <field name="name" string="Tên Đề Tài"/>
-                    <field name="code"/>
-                    <field name="advisor_id"/>
-                    <filter name="available" string="Còn Trống" 
-                        domain="[('state', '=', 'available')]"/>
-                    <filter name="full" string="Đã Đủ" 
-                        domain="[('state', '=', 'full')]"/>
-                    <filter name="closed" string="Đã Đóng" 
-                        domain="[('state', '=', 'closed')]"/>
-                    <separator/>
-                    <group expand="0" string="Nhóm theo">
-                        <filter name="group_advisor" string="Giáo Viên" 
-                            context="{'group_by': 'advisor_id'}"/>
-                        <filter name="group_state" string="Trạng Thái" 
-                            context="{'group_by': 'state'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-        
+<record id="thesis_topic_search" model="ir.ui.view">
+    <field name="name">thesis.topic.search</field>
+    <field name="model">thesis.topic</field>
+    <field name="arch" type="xml">
+        <search string="Tìm Đề Tài">
+            <field name="name" string="Tên Đề Tài"/>
+            <field name="code"/>
+            <field name="advisor_id"/>
+            <filter name="available" string="Còn Trống"
+                domain="[('state', '=', 'available')]"/>
+            <filter name="full" string="Đã Đủ"
+                domain="[('state', '=', 'full')]"/>
+            <filter name="closed" string="Đã Đóng"
+                domain="[('state', '=', 'closed')]"/>
+            <separator/>
+            <filter name="group_advisor" string="Giáo Viên"
+                context="{'group_by': 'advisor_id'}"/>
+            <filter name="group_state" string="Trạng Thái"
+                context="{'group_by': 'state'}"/>
+        </search>
+    </field>
+</record>
         <!-- Action -->
         <record id="thesis_topic_action" model="ir.actions.act_window">
             <field name="name">Quản Lý Đề Tài</field>
             <field name="res_model">thesis.topic</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Tạo đề tài tốt nghiệp mới
@@ -119,17 +116,17 @@
         
         <!-- Assignment Tree View -->
         <record id="thesis_assignment_tree" model="ir.ui.view">
-            <field name="name">thesis.assignment.tree</field>
+            <field name="name">thesis.assignment.list</field>
             <field name="model">thesis.assignment</field>
             <field name="arch" type="xml">
-                <tree string="Danh Sách Giao Nhận">
+                <list string="Danh Sách Giao Nhận">
                     <field name="topic_id"/>
                     <field name="student_id"/>
                     <field name="student_code"/>
                     <field name="assigned_date"/>
                     <field name="assigned_by"/>
                     <field name="state"/>
-                </tree>
+                </list>
             </field>
         </record>
         
@@ -142,13 +139,14 @@
                     <header>
                         <button name="action_accept" string="Xác Nhận Nhận" 
                             type="object" class="btn-primary" 
-                            states="assigned"/>
+                            invisible="state != 'assigned'"/>
+
                         <button name="action_complete" string="Hoàn Thành" 
                             type="object" class="btn-success" 
-                            states="accepted"/>
+                            invisible="state != 'accepted'"/>
                         <button name="action_cancel" string="Hủy" 
                             type="object" class="btn-danger" 
-                            states="assigned,accepted"/>
+                            invisible="state not in ['assigned', 'accepted']"/>
                         <field name="state" widget="statusbar" options="{'clickable': True}"/>
                     </header>
                     <sheet>
@@ -173,7 +171,7 @@
         <record id="thesis_assignment_action" model="ir.actions.act_window">
             <field name="name">Danh Sách Giao Nhận</field>
             <field name="res_model">thesis.assignment</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
         
         <!-- ================ MENU ================ -->
