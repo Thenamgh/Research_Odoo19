@@ -7,7 +7,11 @@
         <field name="model">graduation.project</field>
         <field name="arch" type="xml">
             <list>
+                <field name="code"/>
                 <field name="name"/>
+                <field name="state"/>
+                <field name="score"/>
+                <field name="result"/>
             </list>
         </field>
     </record>
@@ -20,7 +24,11 @@
             <form>
                 <sheet>
                     <group>
+                        <field name="code"/>
                         <field name="name"/>
+                        <field name="state"/>
+                        <field name="score"/>
+                        <field name="result" readonly="1"/>
                     </group>
                 </sheet>
             </form>
