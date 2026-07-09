@@ -10,3 +10,4 @@ access_thesis_project_manager,thesis.project.manager,model_thesis_project,base.g
 access_thesis_student,thesis.student,model_thesis_student,,1,1,1,1
 access_thesis_topic_user,thesis.topic.user,model_thesis_topic,,1,1,1,1
 access_thesis_assignment_user,thesis.assignment.user,model_thesis_assignment,,1,1,1,1
+access_thesis_lecturer_user,thesis.lecturer.user,model_thesis_lecturer,,1,1,1,1

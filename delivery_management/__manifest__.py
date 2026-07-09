@@ -8,9 +8,11 @@
     'data': [
         'security/ir.model.access.csv',
         'views/delivery_management_view.xml',
+        'views/lecturer_management_view.xml',  
+        'views/student_management_view.xml',    
+        'views/student_management.xml',         
         'views/thesis_management_view.xml',
         'views/thesis_topic_view.xml',
-        'views/student_management_view.xml',
         'data/delivery_data.xml',
     ],
     'installable': True,

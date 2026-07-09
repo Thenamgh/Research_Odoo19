@@ -2,37 +2,37 @@
 
 class ThesisStudent(models.Model):
     _name = 'thesis.student'
-    _description = 'Sinh vien lam do an'
+    _description = 'Sinh viên làm đồ án'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'student_code asc'
 
-    name = fields.Char(string='Ho va ten', required=True, tracking=True)
-    student_code = fields.Char(string='Ma sinh vien', required=True, copy=False)
-    class_name = fields.Char(string='Lop')
+    name = fields.Char(string='Họ và Tên', required=True, tracking=True)
+    student_code = fields.Char(string='Mã Sinh Viên', required=True, copy=False)
+    class_name = fields.Char(string='Lớp')
     email = fields.Char(string='Email')
-    phone = fields.Char(string='So dien thoai')
+    phone = fields.Char(string='Số điện thoại')
 
     thesis_topic_id = fields.Many2one(
         comodel_name='thesis.topic',
-        string='De tai do an',
+        string='Đề tài đồ án',
         tracking=True,
     )
     supervisor_id = fields.Many2one(
-        comodel_name='res.users',
-        string='Giang vien huong dan',
+        comodel_name='thesis.lecturer',
+        string='Giảng Viên Hướng dẫn',
         tracking=True,
     )
 
     state = fields.Selection(
         selection=[
-            ('eligible',   'Du dieu kien'),
-            ('registered', 'Da dang ky de tai'),
-            ('assigned',   'Da phan cong GV'),
-            ('submitted',  'Da nop quyen'),
-            ('defended',   'Da bao ve'),
-            ('graduated',  'Tot nghiep'),
+            ('eligible',   'Đủ điều kiện'),
+            ('registered', 'Đã đăng ký đề tài'),
+            ('assigned',   'Đã phân công giảng viên'),
+            ('submitted',  'Đã nộp quyển'),
+            ('defended',   'Đã bảo vệ'),
+            ('graduated',  'Tốt nghiệp'),
         ],
         default='eligible',
         tracking=True,
-        string='Trang thai',
+        string='Trạng thái',
     )

@@ -76,7 +76,7 @@
 
         <!-- MENU -->
         <menuitem id="menu_thesis_student"
-            name="Sinh Viên Đồ Án"
+            name="Quản Lý Sinh Viên"
             parent="menu_delivery_management"
             sequence="5"
             action="thesis_student_action"/>
