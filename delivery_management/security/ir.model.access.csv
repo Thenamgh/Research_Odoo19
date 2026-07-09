@@ -7,3 +7,7 @@ access_delivery_receiver_user,delivery.receiver.user,model_delivery_receiver,,1,
 access_delivery_receiver_manager,delivery.receiver.manager,model_delivery_receiver,base.group_user,1,1,1,1
 access_thesis_project_user,thesis.project.user,model_thesis_project,,1,1,1,0
 access_thesis_project_manager,thesis.project.manager,model_thesis_project,base.group_user,1,1,1,1
+access_thesis_student,thesis.student,model_thesis_student,,1,1,1,1
+access_thesis_topic_user,thesis.topic.user,model_thesis_topic,,1,1,1,1
+access_thesis_assignment_user,thesis.assignment.user,model_thesis_assignment,,1,1,1,1
+access_thesis_lecturer_user,thesis.lecturer.user,model_thesis_lecturer,,1,1,1,1

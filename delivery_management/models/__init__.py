@@ -4,3 +4,5 @@ from . import delivery_statistics
 from . import delivery_wizard
 from . import thesis_management
 from . import thesis_topic
+from . import lecturer_management
+from . import student_management

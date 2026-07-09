@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- views/lecturer_management_view.xml -->
+<!-- 08/07/2026 — View quản lý giảng viên hướng dẫn -->
+<odoo>
+    <data>
+
+        <!-- LIST VIEW -->
+        <record id="thesis_lecturer_list" model="ir.ui.view">
+            <field name="name">thesis.lecturer.list</field>
+            <field name="model">thesis.lecturer</field>
+            <field name="arch" type="xml">
+                <list string="Danh Sách Giảng Viên Hướng Dẫn">
+                    <field name="lecturer_code"/>
+                    <field name="name"/>
+                    <field name="department"/>
+                    <field name="email"/>
+                    <field name="phone"/>
+                    <field name="max_students"/>
+                    <field name="student_count" string="Đang Hướng Dẫn"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- FORM VIEW -->
+        <record id="thesis_lecturer_form" model="ir.ui.view">
+            <field name="name">thesis.lecturer.form</field>
+            <field name="model">thesis.lecturer</field>
+            <field name="arch" type="xml">
+                <form string="Giảng Viên Hướng Dẫn">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <group>
+                            <group string="Thông tin cá nhân">
+                                <field name="lecturer_code"/>
+                                <field name="department"/>
+                                <field name="email"/>
+                                <field name="phone"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group string="Hướng dẫn đồ án">
+                                <field name="max_students"/>
+                                <field name="student_count" string="Đang Hướng Dẫn"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+
+                        <!-- Danh sách SV đang hướng dẫn -->
+                        <notebook>
+                            <page string="Sinh viên đang hướng dẫn">
+                                <field name="student_ids">
+                                    <list string="Danh sách sinh viên">
+                                        <field name="student_code"/>
+                                        <field name="name"/>
+                                        <field name="class_name"/>
+                                        <field name="thesis_topic_id"/>
+                                        <field name="state"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!-- SEARCH VIEW -->
+        <record id="thesis_lecturer_search" model="ir.ui.view">
+            <field name="name">thesis.lecturer.search</field>
+            <field name="model">thesis.lecturer</field>
+            <field name="arch" type="xml">
+                <search string="Tim Giang Vien">
+                    <field name="name" string="Ho ten"/>
+                    <field name="lecturer_code"/>
+                    <field name="department"/>
+                    <separator/>
+                    <filter name="active"
+                        string="Dang hoat dong"
+                        domain="[('active', '=', True)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- ACTION -->
+        <record id="thesis_lecturer_action" model="ir.actions.act_window">
+            <field name="name">Quan Ly Giang Vien</field>
+            <field name="res_model">thesis.lecturer</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <!-- MENU -->
+        <menuitem id="menu_thesis_lecturer"
+            name="Giảng Viên Hướng Dẫn"
+            parent="menu_delivery_management"
+            sequence="6"
+            action="thesis_lecturer_action"/>
+
+    </data>
+</odoo>
