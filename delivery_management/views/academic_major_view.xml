@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- LIST VIEW: Danh sách ngành đào tạo -->
+        <record id="academic_major_list" model="ir.ui.view">
+            <field name="name">academic.major.list</field>
+            <field name="model">academic.major</field>
+            <field name="arch" type="xml">
+                <list string="Danh sách Ngành đào tạo">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="faculty_id"/>
+                    <field name="department_id"/>
+                    <field name="training_level"/>
+                    <field name="duration_years"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- FORM VIEW: Chi tiết ngành đào tạo -->
+        <record id="academic_major_form" model="ir.ui.view">
+            <field name="name">academic.major.form</field>
+            <field name="model">academic.major</field>
+            <field name="arch" type="xml">
+                <form string="Ngành đào tạo">
+                    <sheet>
+
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="Nhập tên ngành đào tạo..."/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <!-- Thông tin nhận diện ngành -->
+                            <group string="Thông tin chung">
+                                <field name="code"/>
+                                <field name="faculty_id"/>
+
+                                <!-- Chỉ hiện bộ môn thuộc khoa đã chọn -->
+                                <field name="department_id" domain="[('faculty_id', '=', faculty_id)]"/>
+
+                                <field name="active"/>
+                            </group>
+
+                            <!-- Thông tin chương trình đào tạo -->
+                            <group string="Thông tin đào tạo">
+                                <field name="training_level"/>
+                                <field name="duration_years"/>
+                            </group>
+                        </group>
+
+                        <group string="Ghi chú">
+                            <field name="note" placeholder="Nhập ghi chú về ngành đào tạo..."/>
+                        </group>
+
+                    </sheet>
+
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!-- SEARCH VIEW: Tìm kiếm ngành -->
+        <record id="academic_major_search" model="ir.ui.view">
+            <field name="name">academic.major.search</field>
+            <field name="model">academic.major</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm Ngành đào tạo">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="faculty_id"/>
+                    <field name="department_id"/>
+                    <field name="training_level"/>
+
+                    <separator/>
+
+                    <filter name="active_major" string="Đang hoạt động" domain="[('active', '=', True)]"/>
+
+                    <filter name="inactive_major" string="Ngừng hoạt động" domain="[('active', '=', False)]"/>
+
+                    <separator/>
+
+                    <filter name="bachelor_major" string="Đại học" domain="[('training_level', '=', 'bachelor')]"/>
+
+                    <filter name="master_major" string="Thạc sĩ" domain="[('training_level', '=', 'master')]"/>
+
+                    <filter name="doctor_major" string="Tiến sĩ" domain="[('training_level', '=', 'doctor')]"/>
+
+                    <separator/>
+
+                    <filter name="group_by_faculty" string="Nhóm theo Khoa" context="{'group_by': 'faculty_id'}"/>
+
+                    <filter name="group_by_department" string="Nhóm theo Bộ môn" context="{'group_by': 'department_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- ACTION: Mở màn hình quản lý ngành -->
+        <record id="academic_major_action" model="ir.actions.act_window">
+            <field name="name">Danh mục Ngành đào tạo</field>
+            <field name="res_model">academic.major</field>
+            <field name="view_mode">list,form</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo ngành đào tạo đầu tiên
+                </p>
+                <p>
+                    Quản lý danh sách ngành đào tạo theo khoa và bộ môn.
+                </p>
+            </field>
+        </record>
+
+        <!-- MENU: Danh mục Ngành đào tạo -->
+        <menuitem id="menu_academic_major" name="Quản lý Ngành đào tạo" parent="menu_academic_catalog" action="academic_major_action" sequence="20"/>
+    </data>
+</odoo>

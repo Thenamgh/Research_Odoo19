@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- LIST VIEW: Danh sách khóa học -->
+        <record id="academic_cohort_list" model="ir.ui.view">
+            <field name="name">academic.cohort.list</field>
+            <field name="model">academic.cohort</field>
+            <field name="arch" type="xml">
+                <list string="Danh sách Khóa học">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="start_year"/>
+                    <field name="end_year"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- FORM VIEW: Chi tiết khóa học -->
+        <record id="academic_cohort_form" model="ir.ui.view">
+            <field name="name">academic.cohort.form</field>
+            <field name="model">academic.cohort</field>
+            <field name="arch" type="xml">
+                <form string="Khóa học">
+                    <sheet>
+
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="Ví dụ: Khóa 15"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <!-- Thông tin nhận diện khóa -->
+                            <group string="Thông tin chung">
+                                <field name="code" placeholder="Ví dụ: K15"/>
+                                <field name="active"/>
+                            </group>
+
+                            <!-- Thời gian đào tạo -->
+                            <group string="Thời gian đào tạo">
+                                <field name="start_year"/>
+                                <field name="end_year"/>
+                            </group>
+                        </group>
+
+                        <group string="Ghi chú">
+                            <field name="note" placeholder="Nhập ghi chú về khóa học..."/>
+                        </group>
+
+                    </sheet>
+
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!-- SEARCH VIEW: Tìm kiếm khóa học -->
+        <record id="academic_cohort_search" model="ir.ui.view">
+            <field name="name">academic.cohort.search</field>
+            <field name="model">academic.cohort</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm Khóa học">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="start_year"/>
+                    <field name="end_year"/>
+
+                    <separator/>
+
+                    <filter name="active_cohort" string="Đang hoạt động" domain="[('active', '=', True)]"/>
+
+                    <filter name="inactive_cohort" string="Đã kết thúc" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- ACTION: Mở màn hình quản lý khóa học -->
+        <record id="academic_cohort_action" model="ir.actions.act_window">
+            <field name="name">Danh mục Khóa học</field>
+            <field name="res_model">academic.cohort</field>
+            <field name="view_mode">list,form</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo khóa học đầu tiên
+                </p>
+                <p>
+                    Quản lý các khóa tuyển sinh và thời gian đào tạo.
+                </p>
+            </field>
+        </record>
+
+        <!-- MENU: Danh mục Khóa học -->
+        <menuitem id="menu_academic_cohort" name="Quản lý Khóa học" parent="menu_academic_catalog" action="academic_cohort_action" sequence="50"/>
+    </data>
+</odoo>

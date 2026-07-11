@@ -17,7 +17,7 @@ Quản lý các đề tài mà nhà trường cung cấp.
 - `assigned_count`: Số sinh viên đã nhận (tính toán)
 - `available_slots`: Vị trí còn trống (tính toán)
 - `state`: Trạng thái (available/full/closed)
-- `advisor_id`: Giáo viên hướng dẫn
+- `advisor_id`: Giảng viên hướng dẫn
 - `assignment_ids`: Danh sách giao nhận
 
 ### 2. **thesis.assignment** - Bản Ghi Giao Nhận
@@ -205,7 +205,7 @@ cancelled → (giải phóng vị trí)
 SELECT * FROM thesis_topic 
 WHERE state = 'available' AND max_students - assigned_count > 0;
 
--- Thống kê theo giáo viên
+-- Thống kê theo Giảng viên
 SELECT advisor_id, COUNT(*) as total, 
        SUM(CASE WHEN available_slots > 0 THEN 1 ELSE 0 END) as available
 FROM thesis_topic

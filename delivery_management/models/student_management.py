@@ -62,6 +62,8 @@ class ThesisStudent(models.Model):
         comodel_name="thesis.lecturer",
         string="Giảng Viên Hướng dẫn",
         tracking=True,
+        domain=[("available_for_supervision", "=", True)],
+        ondelete="Set null",
     )
 
     state = fields.Selection(

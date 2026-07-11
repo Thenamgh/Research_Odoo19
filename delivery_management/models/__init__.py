@@ -4,5 +4,10 @@ from . import delivery_statistics
 from . import delivery_wizard
 from . import thesis_management
 from . import thesis_topic
+from . import academic_faculty
+from . import academic_department
+from . import academic_major
+from . import academic_cohort
+from . import academic_class
 from . import student_management
 from . import lecturer_management

@@ -8,6 +8,11 @@
     'data': [
         'security/ir.model.access.csv',
         'views/delivery_management_view.xml',
+        'views/academic_faculty_view.xml',
+        'views/academic_department_view.xml',
+        'views/academic_major_view.xml',
+        'views/academic_cohort_view.xml',
+        'views/academic_class_view.xml',
         'views/lecturer_management_view.xml',  
         'views/student_management.xml',         
         'views/thesis_management_view.xml',

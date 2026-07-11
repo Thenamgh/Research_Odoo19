@@ -11,3 +11,8 @@ access_thesis_student,thesis.student,model_thesis_student,,1,1,1,1
 access_thesis_topic_user,thesis.topic.user,model_thesis_topic,,1,1,1,1
 access_thesis_assignment_user,thesis.assignment.user,model_thesis_assignment,,1,1,1,1
 access_thesis_lecturer_user,thesis.lecturer.user,model_thesis_lecturer,,1,1,1,1
+access_academic_faculty_user,academic.faculty.user,model_academic_faculty,base.group_user,1,1,1,1
+access_academic_department_user,academic.department.user,model_academic_department,base.group_user,1,1,1,1
+access_academic_major_user,academic.major.user,model_academic_major,base.group_user,1,1,1,1
+access_academic_cohort_user,academic.cohort.user,model_academic_cohort,base.group_user,1,1,1,1
+access_academic_class_user,academic.class.user,model_academic_class,base.group_user,1,1,1,1
