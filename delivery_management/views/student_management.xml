@@ -12,8 +12,13 @@
                     <field name="name"/>
                     <field name="class_name"/>
                     <field name="email"/>
-                    <field name="supervisor_id"/>
+
                     <field name="state"/>
+                    <field name="has_thesis_wish" string = "Có nguyện vọng"/>
+                    <field name="eligible_date"/>
+                    <field name="wish_date"/>
+
+                    <field name="supervisor_id"/>
                 </list>
             </field>
         </record>
@@ -25,7 +30,11 @@
             <field name="arch" type="xml">
                 <form string="Sinh Viên">
                     <header>
-                        <field name="state" widget="statusbar"/>
+                        <!-- Chỉ hiển thị khi sinh viên chưa được xét điều kiện -->
+                        <button name="action_mark_eligible" string="Xác nhận đủ điều kiện" type="object" class="btn-primary" invisible="state != 'new'"/>
+                        <!-- Chỉ sinh viên đủ điều kiện và chưa có nguyện vọng mới thấy nút -->
+                        <button name="action_register_wish" string="Đăng ký nguyện vọng" type="object" class="btn-primary" invisible="state != 'eligible' or has_thesis_wish"/>
+                        <field name="state" widget="statusbar" statusbar_visible="new,eligible,registered,assigned,submitted,defended,graduated"/>
                     </header>
                     <sheet>
                         <group>
@@ -36,9 +45,15 @@
                                 <field name="email"/>
                                 <field name="phone"/>
                             </group>
-                            <group string="Thông tin đồ án">
-                                <field name="thesis_topic_id"/>
-                                <field name="supervisor_id"/>
+                            <group string="Xét điều kiện làm đồ án">
+                                <field name="eligible_date" readonly="1"/>
+                                <field name="eligible_checked_by" readonly="1"/>
+                                <field name="eligible_note" placeholder="Nhập ghi chú xét điều kiện..."/>
+                            </group>
+                            <group string="Nguyện vọng làm đồ án">
+                                <field name="has_thesis_wish" readonly="1"/>
+                                <field name="wish_date" readonly="1"/>
+                                <field name="wish_note" placeholder="Nhập ghi chú nguyện vọng..."/>
                             </group>
                         </group>
                     </sheet>
@@ -57,12 +72,17 @@
                     <field name="student_code"/>
                     <field name="supervisor_id"/>
                     <separator/>
-                    <filter name="eligible" string="Đủ điều kiện"
-                        domain="[('state', '=', 'eligible')]"/>
-                    <filter name="registered" string="Đã đăng ký"
-                        domain="[('state', '=', 'registered')]"/>
-                    <filter name="graduated" string="Tốt nghiệp"
-                        domain="[('state', '=', 'graduated')]"/>
+                    <filter name="eligible" string="Đủ điều kiện" domain="[('state', '=', 'eligible')]"/>
+                    <filter name="waiting_eligibility" string="Chưa xét điều kiện" domain="[('state', '=', 'new')]"/>
+
+                    <filter name="has_thesis_wish" string="Có nguyện vọng" domain="[('has_thesis_wish', '=', True)]"/>
+
+                    <filter name="eligible_with_wish" string="Đủ điều kiện và có nguyện vọng" domain="[
+            ('state', '=', 'eligible'),
+            ('has_thesis_wish', '=', True)
+        ]"/>
+                    <filter name="registered" string="Đã đăng ký" domain="[('state', '=', 'registered')]"/>
+                    <filter name="graduated" string="Tốt nghiệp" domain="[('state', '=', 'graduated')]"/>
                 </search>
             </field>
         </record>
@@ -75,11 +95,7 @@
         </record>
 
         <!-- MENU -->
-        <menuitem id="menu_thesis_student"
-            name="Quản Lý Sinh Viên"
-            parent="menu_delivery_management"
-            sequence="5"
-            action="thesis_student_action"/>
+        <menuitem id="menu_thesis_student" name="Quản Lý Sinh Viên" parent="menu_delivery_management" sequence="5" action="thesis_student_action"/>
 
     </data>
 </odoo>
