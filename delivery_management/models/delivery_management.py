@@ -4,6 +4,7 @@ from datetime import datetime
 
 class DeliveryManagement(models.Model):
     _name = "delivery.management"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Delivery Management"
     _order = "id desc"
 

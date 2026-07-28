@@ -7,7 +7,10 @@ class ThesisLecturer(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "lecturer_code asc"
     _rec_name = "name"
-
+    _lecturer_code_unique = models.Constraint(
+        "UNIQUE(lecturer_code)",
+        "Mã giảng viên đã tồn tại. Vui lòng sử dụng mã khác.",
+    )
     # Thong tin Giang vien
     name = fields.Char(
         string="Họ và Tên",
@@ -26,8 +29,10 @@ class ThesisLecturer(models.Model):
     phone = fields.Char(
         string="Số điện thoại",
     )
-    department = fields.Char(
+    department = fields.Many2one(
+        "academic.department",
         string="Bộ môn",
+        help = "Trường dữ liệu cũ, chỉ dữ tạm thời để phục vụ chuyển đổi dữ liệu",
     )
     date_of_birth = fields.Date(
         string="Ngày sinh",
@@ -80,7 +85,17 @@ class ThesisLecturer(models.Model):
         tracking=True,
         help="Chuyên ngành đào tạo hoặc nghiên cứu của giảng viên.",
     )
+    professional_qualification = fields.Char(
+        string="Trình độ chuyên môn",
+        tracking=True,
+        help="Trình độ chuyên môn được ghi nhận trong hồ sơ nhân sự.",
+    )
 
+    position = fields.Char(
+        string="Chức vụ",
+        tracking=True,
+        help="Chức vụ hiện tại của giảng viên.",
+    )
     # =========================================================
     # THÔNG TIN ĐƠN VỊ CÔNG TÁC
     # =========================================================
@@ -124,7 +139,7 @@ class ThesisLecturer(models.Model):
     # Giới hạn hướng dẫn được tự động xác định theo học vị của Thầy/Cô
     max_students = fields.Integer(
         string="Số lượng sinh viên tối đa",
-        compute="_compute_max_student",
+        compute="_compute_max_students",
         store=True,
         readonly=True,
         help=(
@@ -151,7 +166,7 @@ class ThesisLecturer(models.Model):
         compute="_compute_available_for_supervision",
         store=True,
         help=(
-            "Được tự động đánh dấu khi giảng viên đang hoạt động"
+            "Được tự động đánh dấu khi giảng viên đang hoạt động "
             "và số sinh viên hiện tại chưa đạt giới hạn."
         ),
     )
@@ -183,7 +198,7 @@ class ThesisLecturer(models.Model):
     # Tính toán số lượng sinh viên đang hướng dẫn
     @api.depends("student_ids")
     def _compute_student_count(self):
-        "Danh sách sinh viên đang hướng dẫn"
+        "Tính số lượng sinh viên mà giảng viên đang hướng dẫn"
         for lecturer in self:
             lecturer.student_count = len(lecturer.student_ids)
 
@@ -208,6 +223,9 @@ class ThesisLecturer(models.Model):
 
     def is_available(self):
         """Kiểm tra giảng viên còn có thể nhân thêm sinh viên không?
-        Method trả về Boolean đã được tính bỏi available_for_supervision"""
+        Returns:
+            bool: True nếu giảng viên còn khả năng nhận sinh viên,
+            ngược lại trả về False
+        """
         self.ensure_one()
         return self.available_for_supervision

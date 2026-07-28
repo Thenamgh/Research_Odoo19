@@ -15,7 +15,48 @@ class ThesisStudent(models.Model):
         required=True,
         copy=False,
     )
-    class_name = fields.Char(string="Lớp")
+        # Thông tin cá nhân và đào tạo
+    date_of_birth = fields.Date(
+        string="Ngày sinh",
+        tracking=True,
+    )
+
+    class_id = fields.Many2one(
+        comodel_name="academic.class",
+        string="Lớp hành chính",
+        tracking=True,
+        ondelete="restrict",
+        help="Lớp hành chính hiện tại của sinh viên",
+    )
+        # Thông tin đào tạo tự động lấy từ lớp hành chính
+    major_id = fields.Many2one(
+        comodel_name="academic.major",
+        string="Ngành đào tạo",
+        related="class_id.major_id",
+        store=True,
+        readonly=True,
+    )
+
+    faculty_id = fields.Many2one(
+        comodel_name="academic.faculty",
+        string="Khoa",
+        related="class_id.faculty_id",
+        store=True,
+        readonly=True,
+    )
+
+    cohort_id = fields.Many2one(
+        comodel_name="academic.cohort",
+        string="Khóa học",
+        related="class_id.cohort_id",
+        store=True,
+        readonly=True,
+    )
+    # Trường cũ, tạm giữ để chuyển đổi dữ liệu
+    class_name = fields.Char(
+        string="Lớp (dữ liệu cũ)",
+        help="Trường lớp dạng văn bản cũ, tạm giữ để chuyển đổi sang Lớp hành chính.",
+    )
     email = fields.Char(string="Email")
     phone = fields.Char(string="Số điện thoại")
 
@@ -63,7 +104,7 @@ class ThesisStudent(models.Model):
         string="Giảng Viên Hướng dẫn",
         tracking=True,
         domain=[("available_for_supervision", "=", True)],
-        ondelete="Set null",
+        ondelete="set null",
     )
 
     state = fields.Selection(

@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class DeliveryHelper(models.Model):
+class DeliveryHelper(models.AbstractModel):
     _name = "delivery.helper"
     _description = "Delivery Helper Functions"
 
@@ -90,8 +90,14 @@ class DeliveryTracking(models.Model):
     delivery_id = fields.Many2one(
         "delivery.management", string="Delivery", required=True, ondelete="cascade"
     )
+    delivery_id = fields.Many2one(
+        "delivery.management",
+        string = "Delivery",
+        required = True,
+        ondelete = "cascade",
+    )
 
-    tracking_number = fields.Char(string="Tracking Number", unique=True)
+    tracking_number = fields.Char(string="Tracking Number")
     location = fields.Char(string="Current Location")
     latitude = fields.Float(string="Latitude")
     longitude = fields.Float(string="Longitude")

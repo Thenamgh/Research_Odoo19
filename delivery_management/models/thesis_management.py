@@ -1,9 +1,11 @@
-from odoo import api, fields, models
 from datetime import datetime
 
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 class ThesisProject(models.Model):
     _name = "thesis.project"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Graduation Thesis Project"
     _order = "id desc"
 
@@ -17,16 +19,39 @@ class ThesisProject(models.Model):
     title = fields.Char(string="Title", required=True)
     code = fields.Char(string="Project Code", readonly=True)
 
-    student_id = fields.Many2one("res.partner", string="Student")
+    student_id = fields.Many2one(
+        comodel_name="thesis.student",
+        string="Sinh viên",
+        required=True,
+        tracking=True,
+        ondelete="restrict",
+        domain=[
+            ("has_thesis_wish", "=", True),
+            ("state", "in", ["eligible", "registered", "assigned"]),
+        ],
+        help=(
+            "Chỉ hiển thị sinh viên đủ điều kiện, "
+            "đã đăng ký nguyện vọng làm đồ án."
+        ),
+    )
     student_phone = fields.Char(
-        related="student_id.phone", string="Student Phone", readonly=True
+        related = "student_id.phone",
+        string = "Số điện thoại sinh viên",
+        readonly = True,
     )
     student_email = fields.Char(
-        related="student_id.email", string="Student Email", readonly=True
+    related="student_id.email",
+    string="Email sinh viên",
+    readonly=True,
     )
 
-    supervisor_id = fields.Many2one("res.users", string="Supervisor")
-
+    supervisor_id = fields.Many2one(
+        comodel_name="thesis.lecturer",
+        string="Giảng viên hướng dẫn",
+        tracking=True,
+        ondelete="restrict",
+        domain="[('active', '=', True)]",
+    )
     status = fields.Selection(
         [
             ("draft", "Draft"),
@@ -62,12 +87,47 @@ class ThesisProject(models.Model):
     created_date = fields.Datetime(
         string="Created Date", readonly=True, default=fields.Datetime.now
     )
+    @api.onchange("student_id")
+    def _onchange_student_id(self):
+        """Tự động lấy giảng viên đã phân công cho sinh viên."""
+        if not self.student_id:
+            self.supervisor_id = False
+            return
 
+        self.supervisor_id = self.student_id.supervisor_id
+    @api.constrains("student_id", "status")
+    def _check_active_project_per_student(self):
+        """Mỗi sinh viên chỉ được có một đồ án đang hoạt động."""
+        inactive_statuses = ["completed", "cancelled"]
+
+        for project in self:
+            if not project.student_id or project.status in inactive_statuses:
+                continue
+
+            duplicated_project = self.search(
+                [
+                    ("id", "!=", project.id),
+                    ("student_id", "=", project.student_id.id),
+                    ("status", "not in", inactive_statuses),
+                ],
+                limit=1,
+            )
+
+            if duplicated_project:
+                raise ValidationError(
+                    _(
+                        "Sinh viên %(student)s đã có đồ án đang hoạt động: "
+                        "%(project)s."
+                    )
+                    % {
+                        "student": project.student_id.name,
+                        "project": duplicated_project.name,
+                    }
+                )
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get("name", "NEW") == "NEW":
-                # Try to use sequence 'thesis.project' if defined, otherwise fallback to timestamp code
                 seq = self.env["ir.sequence"].sudo().next_by_code("thesis.project")
                 if seq:
                     vals["name"] = seq
@@ -78,10 +138,27 @@ class ThesisProject(models.Model):
         return super().create(vals_list)
 
     def action_assign(self):
-        for rec in self:
-            if rec.student_id:
-                rec.status = "assigned"
-                rec.assigned_by = self.env.user
+        """Xác nhận giao đồ án cho sinh viên"""
+        for project in self:
+            if not project.student_id:
+                raise ValidationError(
+                    _("Vui lòng chọn sinh viên trước khi giao đồ án")
+                )
+            if not project.supervisor_id:
+                raise ValidationError(
+                    _(
+                        "Sinh viên %s chưa được phân công "
+                        "giảng viên hướng dẫn"
+                    )
+                    % project.student_id.name
+                )
+            project.write(
+                {
+                    "status": "assigned",
+                    "assigned_by": self.env.user.id,
+                }
+            )
+            
         return True
 
     def action_start(self):

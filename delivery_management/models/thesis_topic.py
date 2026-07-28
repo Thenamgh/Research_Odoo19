@@ -5,6 +5,7 @@ class ThesisTopic(models.Model):
     """Đề tài tốt nghiệp - Nhà trường giao cho sinh viên"""
 
     _name = "thesis.topic"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Đề Tài Tốt Nghiệp"
     _order = "create_date desc"
 
@@ -137,6 +138,8 @@ class ThesisAssignment(models.Model):
     """Bản ghi giao/nhận đề tài giữa nhà trường và sinh viên"""
 
     _name = "thesis.assignment"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
+
     _description = "Giao/Nhận Đề Tài"
     _order = "assigned_date desc"
 
