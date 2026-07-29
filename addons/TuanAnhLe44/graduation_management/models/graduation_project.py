@@ -109,6 +109,147 @@ class GraduationProject(models.Model):
             )
 
         return super().create(vals_list)
+    # ==================================================
+    # Demo Environment
+    # ==================================================
+    def action_demo_env(self):
+
+        """ Example 1: Thực hành tìm hiểu Environment."""
+
+        print("\n========== ENV ==========")
+
+        print("Record hiện tại :", self)
+        print("ID :", self.id)
+
+        print()
+
+        print("User hiện tại :", self.env.user.name)
+        print("Company :", self.env.company.name)
+
+        print()
+
+        print("Context :")
+        print(self.env.context)
+
+        print("=========================\n")
+    
+        # """ Example 2: Đếm tổng số đồ án. """
+
+        # total = self.env["graduation.project"].search_count([])
+
+        # print("\n========== THỐNG KÊ ==========")
+        # print("Tổng số đồ án:", total)
+        # print("==============================\n")
+
+        # """ Example 3: Liệt kê toàn bộ đồ án. """
+
+        # projects = self.env["graduation.project"].search([])
+
+        # print("\n========== DANH SÁCH ==========")
+
+        # for project in projects:
+
+        #     print(
+        #         project.code,
+        #         project.name,
+        #         project.state,
+        # )
+
+        # print("==============================\n")
+
+        # """ Example 4: Tìm đồ án chưa bảo vệ. """
+
+        # projects = self.env["graduation.project"].search(
+        #     [
+        #         ("state", "!=", "done")
+        #     ]
+        # )
+
+        # print("\n========== CHƯA BẢO VỆ ==========")
+
+        # for project in projects:
+
+        #     print(
+        #         project.code,
+        #         project.name,
+        #         project.state,
+        #     )
+
+        # print("=================================\n")
+        # """ Example 5: Minh họa Context."""
+
+        # print("\n========== CONTEXT ==========")
+
+        # print(self.env.context)
+
+        # print()
+
+        # print("active_model :",
+        #     self.env.context.get("active_model"))
+
+        # print("active_id :",
+        #     self.env.context.get("active_id"))
+
+        # print("active_ids :",
+        #     self.env.context.get("active_ids"))
+
+        # print("=============================\n")
+
+
+
+        #Các ví dụ khác tham khảo bên dưới"
+        #"""
+        #Demo sử dụng Context.
+        #"""
+
+        #print("\n========== CONTEXT ==========")
+
+        #print("Context:")
+
+        #print(self.env.context)
+
+        #print("\nCác giá trị thường dùng:")
+
+        #print("Model hiện tại :", self.env.context.get("active_model"))
+
+        #print("ID bản ghi :", self.env.context.get("active_id"))
+
+        #print("Danh sách ID :", self.env.context.get("active_ids"))
+
+        #print("=============================\n")
+        #--------------Tách---------------
+
+        #""" Demo sử dụng Environment (env)."""
+
+        #print("\n========== RECORDSET ==========")
+
+        #print("Self :", self)
+
+        #print("Model :", self._name)
+
+        #print("ID :", self.id)
+
+        #print("IDs :", self.ids)
+
+        #print("Số bản ghi :", len(self))
+
+        #print("===============================\n")
+        
+        #----------------Tách--------------
+
+        #print("\n========== DEMO ENV ==========")
+
+        #print("Recordset :", self)
+
+        #print("Environment :", self.env)
+
+        #print("User :", self.env.user.name)
+
+        #print("User ID :", self.env.uid)
+
+        #print("Company :", self.env.company.name)
+
+        #print("==============================\n")
     # ==========================================
     # API 6 - @api.returns
     # ==========================================
