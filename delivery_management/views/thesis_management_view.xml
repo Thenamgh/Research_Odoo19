@@ -7,13 +7,15 @@
             <field name="name">thesis.project.list</field>
             <field name="model">thesis.project</field>
             <field name="arch" type="xml">
-                <list string="Thesis Projects">
-                    <field name="name"/>
-                    <field name="title"/>
+                <list string="Danh sách hồ sơ đồ án">
+                    <field name="batch_id"/>
+                    <field name="class_id"/>
+                    <field name="student_code"/>
                     <field name="student_id"/>
+                    <field name="title"/>
                     <field name="supervisor_id"/>
+                    <field name="lecturer_code"/>
                     <field name="status"/>
-                    <field name="grade"/>
                 </list>
             </field>
         </record>
@@ -110,7 +112,20 @@
                 </form>
             </field>
         </record>
+        <filter name="unassigned" string="Chưa phân công GVHD" domain="[
+        ('supervisor_id', '=', False),
+        ('status', 'not in', ['completed', 'cancelled'])
+    ]" />
 
+        <group expand="0" string="Nhóm theo">
+            <filter name="group_by_batch" string="Đợt đồ án" context="{'group_by': 'batch_id'}" />
+
+            <filter name="group_by_class" string="Lớp" context="{'group_by': 'class_id'}" />
+
+            <filter name="group_by_supervisor" string="Giảng viên hướng dẫn" context="{'group_by': 'supervisor_id'}" />
+
+            <filter name="group_by_status" string="Trạng thái quy trình" context="{'group_by': 'status'}" />
+        </group>
         <!-- Search -->
         <record id="view_thesis_project_search" model="ir.ui.view">
             <field name="name">thesis.project.search</field>
@@ -199,51 +214,16 @@
         <!-- MENU QUẢN LÝ VÀ PHÂN CÔNG                           -->
         <!-- ================================================== -->
 
-        <menuitem
-            id="menu_thesis_management"
-            name="Quản lý đồ án"
-            parent="menu_delivery_management"
-            sequence="20"
-        />
+        <menuitem id="menu_thesis_management" name="Quản lý đồ án" parent="menu_delivery_management" sequence="20" />
 
-        <menuitem
-            id="menu_thesis_list"
-            name="Tất cả hồ sơ"
-            parent="menu_thesis_management"
-            action="action_thesis_project"
-            sequence="10"
-        />
+        <menuitem id="menu_thesis_list" name="Tất cả hồ sơ" parent="menu_thesis_management" action="action_thesis_project" sequence="10" />
 
-        <menuitem
-            id="menu_thesis_by_class"
-            name="Phân công theo lớp"
-            parent="menu_thesis_management"
-            action="action_thesis_project_by_class"
-            sequence="20"
-        />
+        <menuitem id="menu_thesis_by_class" name="Phân công theo lớp" parent="menu_thesis_management" action="action_thesis_project_by_class" sequence="20" />
 
-        <menuitem
-            id="menu_thesis_by_supervisor"
-            name="Phân công theo giảng viên"
-            parent="menu_thesis_management"
-            action="action_thesis_project_by_supervisor"
-            sequence="30"
-        />
+        <menuitem id="menu_thesis_by_supervisor" name="Phân công theo giảng viên" parent="menu_thesis_management" action="action_thesis_project_by_supervisor" sequence="30" />
 
-        <menuitem
-            id="menu_thesis_unassigned"
-            name="Chưa phân công GVHD"
-            parent="menu_thesis_management"
-            action="action_thesis_project_unassigned"
-            sequence="40"
-        />
+        <menuitem id="menu_thesis_unassigned" name="Chưa phân công GVHD" parent="menu_thesis_management" action="action_thesis_project_unassigned" sequence="40" />
 
-        <menuitem
-            id="menu_thesis_by_status"
-            name="Theo dõi quy trình 11 bước"
-            parent="menu_thesis_management"
-            action="action_thesis_project_by_status"
-            sequence="50"
-        />
+        <menuitem id="menu_thesis_by_status" name="Theo dõi quy trình 11 bước" parent="menu_thesis_management" action="action_thesis_project_by_status" sequence="50" />
     </data>
 </odoo>
