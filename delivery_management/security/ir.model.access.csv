@@ -16,3 +16,4 @@ access_academic_department_user,academic.department.user,model_academic_departme
 access_academic_major_user,academic.major.user,model_academic_major,base.group_user,1,1,1,1
 access_academic_cohort_user,academic.cohort.user,model_academic_cohort,base.group_user,1,1,1,1
 access_academic_class_user,academic.class.user,model_academic_class,base.group_user,1,1,1,1
+access_thesis_batch_user,thesis.batch.user,model_thesis_batch,base.group_user,1,1,1,1

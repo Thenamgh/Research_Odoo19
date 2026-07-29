@@ -29,9 +29,9 @@ class ThesisLecturer(models.Model):
     phone = fields.Char(
         string="Số điện thoại",
     )
-    department = fields.Many2one(
-        "academic.department",
+    department = fields.Char(
         string="Bộ môn",
+        readonly=True,
         help = "Trường dữ liệu cũ, chỉ dữ tạm thời để phục vụ chuyển đổi dữ liệu",
     )
     date_of_birth = fields.Date(

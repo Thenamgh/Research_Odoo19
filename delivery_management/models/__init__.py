@@ -11,3 +11,4 @@ from . import academic_cohort
 from . import academic_class
 from . import student_management
 from . import lecturer_management
+from . import thesis_batch

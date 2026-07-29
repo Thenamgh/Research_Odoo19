@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Danh sách đợt đồ án -->
+        <record id="view_thesis_batch_list" model="ir.ui.view">
+            <field name="name">thesis.batch.list</field>
+            <field name="model">thesis.batch</field>
+            <field name="arch" type="xml">
+                <list string="Các đợt đồ án">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="academic_year"/>
+                    <field name="semester"/>
+                    <field name="date_start"/>
+                    <field name="submission_deadline"/>
+                    <field name="defense_date" optional="show"/>
+                    <field name="date_end"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Biểu mẫu đợt đồ án -->
+        <record id="view_thesis_batch_form" model="ir.ui.view">
+            <field name="name">thesis.batch.form</field>
+            <field name="model">thesis.batch</field>
+            <field name="arch" type="xml">
+                <form string="Đợt đồ án tốt nghiệp">
+                    <header>
+                        <button name="action_open_registration" string="Mở đăng ký" type="object" class="btn-primary" invisible="state != 'draft'" />
+
+                        <button name="action_start_batch" string="Bắt đầu thực hiện" type="object" class="btn-primary" invisible="state != 'registration'" />
+
+                        <button name="action_start_defense" string="Bắt đầu bảo vệ" type="object" class="btn-primary" invisible="state != 'in_progress'" />
+
+                        <button name="action_done" string="Kết thúc đợt" type="object" class="btn-primary" invisible="state != 'defense'" />
+
+                        <button name="action_cancel" string="Hủy đợt" type="object" invisible="state in ['done', 'cancelled']" />
+
+                        <button name="action_reset_to_draft" string="Đưa về dự thảo" type="object" invisible="state != 'cancelled'" />
+
+                        <field name="state" widget="statusbar" statusbar_visible="draft,registration,in_progress,defense,done" />
+                    </header>
+
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="Ví dụ: Đợt 1 đồ án tốt nghiệp 2026 - 2027" />
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Thông tin chung">
+                                <field name="code"/>
+                                <field name="academic_year"/>
+                                <field name="semester"/>
+                                <field name="active"/>
+                            </group>
+
+                            <group string="Thời gian đăng ký">
+                                <field name="registration_start_date"/>
+                                <field name="registration_end_date"/>
+                            </group>
+                        </group>
+
+                        <group string="Tiến độ đợt đồ án">
+                            <group>
+                                <field name="date_start"/>
+                                <field name="submission_deadline"/>
+                            </group>
+
+                            <group>
+                                <field name="defense_date"/>
+                                <field name="date_end"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Ghi chú">
+                                <field name="note" placeholder="Nhập mô tả hoặc ghi chú cho đợt đồ án..." />
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tìm kiếm đợt đồ án -->
+        <record id="view_thesis_batch_search" model="ir.ui.view">
+            <field name="name">thesis.batch.search</field>
+            <field name="model">thesis.batch</field>
+            <field name="arch" type="xml">
+                <search string="Tìm đợt đồ án">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="academic_year"/>
+                    <field name="semester"/>
+
+                    <separator/>
+
+                    <filter name="registration" string="Đang đăng ký" domain="[('state', '=', 'registration')]" />
+
+                    <filter name="in_progress" string="Đang thực hiện" domain="[('state', '=', 'in_progress')]" />
+
+                    <filter name="defense" string="Đang bảo vệ" domain="[('state', '=', 'defense')]" />
+
+                    <filter name="done" string="Đã kết thúc" domain="[('state', '=', 'done')]" />
+
+                    <group>
+                        <filter name="group_academic_year" string="Năm học" context="{'group_by': 'academic_year'}" />
+
+                        <filter name="group_semester" string="Học kỳ" context="{'group_by': 'semester'}" />
+
+                        <filter name="group_state" string="Trạng thái" context="{'group_by': 'state'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_thesis_batch" model="ir.actions.act_window">
+            <field name="name">Đợt đồ án</field>
+            <field name="res_model">thesis.batch</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_thesis_batch_search"/>
+        </record>
+
+        <!-- Menu -->
+        <menuitem id="menu_thesis_batch" name="Đợt đồ án" parent="menu_thesis_management" action="action_thesis_batch" sequence="5" />
+
+    </data>
+</odoo>
