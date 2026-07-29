@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ==================================================
+             LIST VIEW: Danh sách lớp học
+             ================================================== -->
+        <record id="academic_class_list" model="ir.ui.view">
+            <field name="name">academic.class.list</field>
+            <field name="model">academic.class</field>
+            <field name="arch" type="xml">
+                <list string="Danh sách Lớp học">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="faculty_id"/>
+                    <field name="major_id"/>
+                    <field name="cohort_id"/>
+                    <field name="advisor_id"/>
+                    <field name="expected_student_count"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- ==================================================
+             FORM VIEW: Thông tin chi tiết lớp học
+             ================================================== -->
+        <record id="academic_class_form" model="ir.ui.view">
+            <field name="name">academic.class.form</field>
+            <field name="model">academic.class</field>
+            <field name="arch" type="xml">
+                <form string="Lớp học">
+                    <sheet>
+
+                        <!-- Tên lớp -->
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="Nhập tên lớp..."/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <!-- Thông tin nhận diện lớp -->
+                            <group string="Thông tin chung">
+                                <field name="code" placeholder="Ví dụ: DCCNTT15.1"/>
+
+                                <field name="major_id"/>
+
+                                <!-- Khoa được tự động lấy từ ngành -->
+                                <field name="faculty_id" readonly="1"/>
+
+                                <field name="cohort_id"/>
+                                <field name="active"/>
+                            </group>
+
+                            <!-- Thông tin quản lý lớp -->
+                            <group string="Thông tin quản lý">
+                                <field name="advisor_id"/>
+                                <field name="expected_student_count"/>
+                            </group>
+                        </group>
+
+                        <group string="Ghi chú">
+                            <field name="note" placeholder="Nhập ghi chú về lớp học..."/>
+                        </group>
+
+                    </sheet>
+
+                    <!-- Lịch sử thay đổi và hoạt động -->
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!-- ==================================================
+             SEARCH VIEW: Tìm kiếm và nhóm lớp học
+             ================================================== -->
+        <record id="academic_class_search" model="ir.ui.view">
+            <field name="name">academic.class.search</field>
+            <field name="model">academic.class</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm Lớp học">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="faculty_id"/>
+                    <field name="major_id"/>
+                    <field name="cohort_id"/>
+                    <field name="advisor_id"/>
+
+                    <separator/>
+
+                    <filter name="active_class" string="Đang hoạt động" domain="[('active', '=', True)]"/>
+
+                    <filter name="inactive_class" string="Ngừng hoạt động" domain="[('active', '=', False)]"/>
+
+                    <separator/>
+
+                    <filter name="group_by_faculty" string="Nhóm theo Khoa" context="{'group_by': 'faculty_id'}"/>
+
+                    <filter name="group_by_major" string="Nhóm theo Ngành" context="{'group_by': 'major_id'}"/>
+
+                    <filter name="group_by_cohort" string="Nhóm theo Khóa" context="{'group_by': 'cohort_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- ==================================================
+             ACTION: Mở màn hình quản lý lớp học
+             ================================================== -->
+        <record id="academic_class_action" model="ir.actions.act_window">
+            <field name="name">Quản lý Lớp học</field>
+            <field name="res_model">academic.class</field>
+            <field name="view_mode">list,form</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo lớp học đầu tiên
+                </p>
+                <p>
+                    Quản lý lớp theo khoa, ngành đào tạo và khóa học.
+                </p>
+            </field>
+        </record>
+
+        <!-- ==================================================
+             MENU: Nằm trong nhóm Quản lý Khoa
+             ================================================== -->
+        <menuitem id="menu_academic_class" name="Quản lý Lớp học" parent="menu_academic_catalog" action="academic_class_action" sequence="60"/>
+
+    </data>
+</odoo>

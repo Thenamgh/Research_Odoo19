@@ -12,11 +12,25 @@
                 <list string="Danh Sách Giảng Viên Hướng Dẫn">
                     <field name="lecturer_code"/>
                     <field name="name"/>
-                    <field name="department"/>
-                    <field name="email"/>
-                    <field name="phone"/>
-                    <field name="max_students"/>
-                    <field name="student_count" string="Đang Hướng Dẫn"/>
+
+                    <!-- Thông tin chuyên môn-->
+                    <field name="academic_rank"/>
+                    <field name="academic_degree"/>
+                    <field name="specialization" optional="hide"/>
+
+                    <!-- Đơn vị công tác-->
+                    <field name="faculty_id"/>
+                    <field name="department_id"/>
+                    <field name="employment_type"/>
+
+                    <!-- Khả năng hướng dẫn -->
+                    <field name="student_count" string="Đang hướng dẫn"/>
+                    <field name="max_students" string="Tối đa"/>
+                    <field name="available_for_supervision" string="Còn nhận sinh viên"/>
+                    <field name="email" optional="hide"/>
+                    <field name="phone" optional="hide"/>
+                    <field name="active"/>
+
                 </list>
             </field>
         </record>
@@ -29,20 +43,43 @@
                 <form string="Giảng Viên Hướng Dẫn">
                     <sheet>
                         <div class="oe_title">
-                            <h1><field name="name"/></h1>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
                         </div>
                         <group>
+                            <!-- Thông tin cá nhân-->
                             <group string="Thông tin cá nhân">
                                 <field name="lecturer_code"/>
-                                <field name="department"/>
-                                <field name="email"/>
-                                <field name="phone"/>
+                                <field name="date_of_birth"/>
+                                <field name="gender"/>
+                                <field name="email" widget="email"/>
+                                <field name="phone" widget="phone"/>
                                 <field name="user_id"/>
                             </group>
-                            <group string="Hướng dẫn đồ án">
-                                <field name="max_students"/>
-                                <field name="student_count" string="Đang Hướng Dẫn"/>
+
+                            <!-- Thông tin chuyên môn-->
+                            <group string="Thông tin chuyên môn">
+                                <field name="academic_rank"/>
+                                <field name="academic_degree"/>
+                                <field name="specialization"/>
+                            </group>
+                        </group>
+                        <group>
+                            <!-- Thông tin công tác -->
+                            <group string="Thông tin công tác">
+                                <field name="faculty_id"/>
+                                <field name="department_id" domain="[('faculty_id', '=', faculty_id)]"/>
+                                <field name="department" string="Bộ môn cũ" readonly="1" invisible="not department"/>
+                                <field name="employment_type"/>
                                 <field name="active"/>
+                            </group>
+
+                            <!-- Thông tin hướng dẫn -->
+                            <group string="Thông tin hướng dẫn đồ án">
+                                <field name="student_count" readonly="1"/>
+                                <field name="max_students" readonly="1"/>
+                                <field name="available_for_supervision" readonly="1"/>
                             </group>
                         </group>
 
@@ -71,31 +108,40 @@
             <field name="name">thesis.lecturer.search</field>
             <field name="model">thesis.lecturer</field>
             <field name="arch" type="xml">
-                <search string="Tim Giang Vien">
-                    <field name="name" string="Ho ten"/>
+                <search string="Tìm Giảng Viên">
+
+                    <!-- Các trường tìm kiếm-->
+                    <field name="name" string="Họ tên"/>
                     <field name="lecturer_code"/>
-                    <field name="department"/>
+                    <field name="academic_rank"/>
+                    <field name="academic_degree"/>
+                    <field name="faculty_id"/>
+                    <field name="department_id"/>
                     <separator/>
-                    <filter name="active"
-                        string="Dang hoat dong"
-                        domain="[('active', '=', True)]"/>
+                    <!-- Các bộ lọc -->
+                    <filter name="active" string="Đang hoạt động" domain="[('active', '=', True)]"/>
+                    <filter name="available" string="Còn nhận sinh viên" domain="[('available_for_supervision', '=', True)]"/>
+
+                    <filter name="full" string="Đã đủ sinh viên" domain="[('active', '=', True), ('available_for_supervision', '=', False)]"/>
+
+                    <separator/>
+
+                    <!-- Nhóm dữ liệu -->
+                    <filter name="group_by_degree" string="Theo học vị" context="{'group_by': 'academic_degree'}"/>
+
+                    <filter name="group_by_faculty" string="Theo khoa" context="{'group_by': 'faculty_id'}"/>
                 </search>
             </field>
         </record>
 
         <!-- ACTION -->
         <record id="thesis_lecturer_action" model="ir.actions.act_window">
-            <field name="name">Quan Ly Giang Vien</field>
+            <field name="name">Quản Lý Giảng Viên</field>
             <field name="res_model">thesis.lecturer</field>
             <field name="view_mode">list,form</field>
         </record>
 
         <!-- MENU -->
-        <menuitem id="menu_thesis_lecturer"
-            name="Giảng Viên Hướng Dẫn"
-            parent="menu_delivery_management"
-            sequence="6"
-            action="thesis_lecturer_action"/>
-
+        <menuitem id="menu_thesis_lecturer" name="Quản lý Giảng viên HD" parent="menu_academic_catalog" action="thesis_lecturer_action" sequence="30"/>
     </data>
 </odoo>

@@ -1,0 +1,1 @@
+from . import thesis_assignment_import_wizard

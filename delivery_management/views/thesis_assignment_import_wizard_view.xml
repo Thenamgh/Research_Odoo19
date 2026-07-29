@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Giao diện wizard -->
+    <record id="view_thesis_assignment_import_wizard_form" model="ir.ui.view">
+        <field name="name">thesis.assignment.import.wizard.form</field>
+        <field name="model">thesis.assignment.import.wizard</field>
+
+        <field name="arch" type="xml">
+            <form string="Import danh sách phân công đồ án">
+                <group>
+                    <field name="batch_id"/>
+                    <field name="file_data" filename="file_name" />
+                    <field name="file_name" invisible="1"/>
+                    <field name="validated" invisible="1"/>
+                </group>
+
+                <group string="Kết quả kiểm tra" invisible="not validated">
+                    <field name="row_count" readonly="1"/>
+                    <field name="validation_message" readonly="1" nolabel="1" />
+                </group>
+
+                <footer>
+                    <button name="action_validate_file" type="object" string="Kiểm tra file" class="btn-primary" invisible="validated" />
+
+                    <button name="action_import_file" type="object" string="Import dữ liệu" class="btn-primary" invisible="not validated" confirm="Thầy xác nhận import toàn bộ dữ liệu hợp lệ vào hệ thống?" />
+
+                    <button string="Đóng" special="cancel" class="btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action mở wizard -->
+    <record id="action_thesis_assignment_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import danh sách phân công</field>
+        <field name="res_model">thesis.assignment.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu import -->
+    <menuitem id="menu_thesis_assignment_import" name="Import danh sách phân công" parent="menu_thesis_management" action="action_thesis_assignment_import_wizard" sequence="5" />
+</odoo>
