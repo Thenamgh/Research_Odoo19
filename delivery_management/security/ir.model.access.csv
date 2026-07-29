@@ -17,3 +17,4 @@ access_academic_major_user,academic.major.user,model_academic_major,base.group_u
 access_academic_cohort_user,academic.cohort.user,model_academic_cohort,base.group_user,1,1,1,1
 access_academic_class_user,academic.class.user,model_academic_class,base.group_user,1,1,1,1
 access_thesis_batch_user,thesis.batch.user,model_thesis_batch,base.group_user,1,1,1,1
+access_thesis_assignment_import_wizard_user,Import danh sách phân công,model_thesis_assignment_import_wizard,base.group_user,1,1,1,1
