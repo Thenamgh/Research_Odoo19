@@ -58,7 +58,7 @@ class DeliveryExportWizard(models.TransientModel):
         if not deliveries:
             raise UserError(_("No deliveries found for the selected criteria."))
 
-        # Prepare CSV data
+        # Cbi dữ liệu
         csv_data = "Reference,Customer,Delivery Date,Status,Total Amount,Driver\n"
         for delivery in deliveries:
             csv_data += f'"{delivery.name}","{delivery.partner_id.name}","{delivery.delivery_date}","{delivery.state}","{delivery.total_amount}","{delivery.driver_name}"\n'

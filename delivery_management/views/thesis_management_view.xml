@@ -112,118 +112,128 @@
                 </form>
             </field>
         </record>
-        <filter name="unassigned" string="Chưa phân công GVHD" domain="[
-        ('supervisor_id', '=', False),
-        ('status', 'not in', ['completed', 'cancelled'])
-    ]" />
+    <!-- Search View -->
+    <record id="view_thesis_project_search" model="ir.ui.view">
+        <field name="name">thesis.project.search</field>
+        <field name="model">thesis.project</field>
 
-        <group expand="0" string="Nhóm theo">
-            <filter name="group_by_batch" string="Đợt đồ án" context="{'group_by': 'batch_id'}" />
+        <field name="arch" type="xml">
+            <search>
+                <!-- Các trường tìm kiếm -->
+                <field name="name"/>
+                <field name="batch_id"/>
+                <field name="title"/>
+                <field name="student_id"/>
+                <field name="supervisor_id"/>
+                <field name="status"/>
 
-            <filter name="group_by_class" string="Lớp" context="{'group_by': 'class_id'}" />
+                <!-- Bộ lọc trạng thái -->
+                <filter name="draft" string="Khởi tạo" domain="[('status', '=', 'draft')]" />
 
-            <filter name="group_by_supervisor" string="Giảng viên hướng dẫn" context="{'group_by': 'supervisor_id'}" />
+                <filter name="assigned" string="Đã phân công" domain="[('status', '=', 'assigned')]" />
 
-            <filter name="group_by_status" string="Trạng thái quy trình" context="{'group_by': 'status'}" />
-        </group>
-        <!-- Search -->
-        <record id="view_thesis_project_search" model="ir.ui.view">
-            <field name="name">thesis.project.search</field>
-            <field name="model">thesis.project</field>
-            <field name="arch" type="xml">
-                <search>
-                    <field name="name"/>
-                    <field name="batch_id"/>
-                    <field name="title"/>
-                    <field name="student_id"/>
-                    <field name="supervisor_id"/>
-                    <field name="status"/>
+                <filter name="in_progress" string="Đang thực hiện" domain="[('status', '=', 'in_progress')]" />
 
-                    <filter string="Draft" name="draft" domain="[('status','=','draft')]"/>
-                    <filter string="Assigned" name="assigned" domain="[('status','=','assigned')]"/>
-                    <filter string="In Progress" name="in_progress" domain="[('status','=','in_progress')]"/>
-                    <filter string="Submitted" name="submitted" domain="[('status','=','submitted')]"/>
-                    <filter string="Defended" name="defended" domain="[('status','=','defended')]"/>
-                    <filter string="Completed" name="completed" domain="[('status','=','completed')]"/>
-                </search>
-            </field>
-        </record>
+                <filter name="submitted" string="Đã nộp" domain="[('status', '=', 'submitted')]" />
 
-        <!-- ================================================== -->
-        <!-- ACTIONS QUẢN LÝ HỒ SƠ ĐỒ ÁN                         -->
-        <!-- ================================================== -->
+                <filter name="defended" string="Đã bảo vệ" domain="[('status', '=', 'defended')]" />
 
-        <!-- Tất cả hồ sơ đồ án -->
-        <record id="action_thesis_project" model="ir.actions.act_window">
-            <field name="name">Tất cả hồ sơ đồ án</field>
-            <field name="res_model">thesis.project</field>
-            <field name="view_mode">list,form</field>
-        </record>
+                <filter name="completed" string="Hoàn thành" domain="[('status', '=', 'completed')]" />
 
-        <!-- Phân công theo lớp -->
-        <record id="action_thesis_project_by_class" model="ir.actions.act_window">
-            <field name="name">Phân công theo lớp</field>
-            <field name="res_model">thesis.project</field>
-            <field name="view_mode">list,form</field>
-            <field name="context">
+                <filter name="unassigned" string="Chưa phân công GVHD" domain="[
+                    ('supervisor_id', '=', False),
+                    ('status', 'not in', ['completed', 'cancelled'])
+                ]" />
+
+                <!-- Odoo 19: không dùng expand và string trên group -->
+                <group>
+                    <filter name="group_by_batch" string="Đợt đồ án" context="{'group_by': 'batch_id'}" />
+
+                    <filter name="group_by_class" string="Lớp" context="{'group_by': 'class_id'}" />
+
+                    <filter name="group_by_supervisor" string="Giảng viên hướng dẫn" context="{'group_by': 'supervisor_id'}" />
+
+                    <filter name="group_by_status" string="Trạng thái quy trình" context="{'group_by': 'status'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================== -->
+    <!-- ACTIONS QUẢN LÝ HỒ SƠ ĐỒ ÁN                         -->
+    <!-- ================================================== -->
+
+    <!-- Tất cả hồ sơ đồ án -->
+    <record id="action_thesis_project" model="ir.actions.act_window">
+        <field name="name">Tất cả hồ sơ đồ án</field>
+        <field name="res_model">thesis.project</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Phân công theo lớp -->
+    <record id="action_thesis_project_by_class" model="ir.actions.act_window">
+        <field name="name">Phân công theo lớp</field>
+        <field name="res_model">thesis.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">
                 {
                     'search_default_group_by_class': 1
                 }
-            </field>
-        </record>
+        </field>
+    </record>
 
-        <!-- Phân công theo giảng viên -->
-        <record id="action_thesis_project_by_supervisor" model="ir.actions.act_window">
-            <field name="name">Phân công theo giảng viên</field>
-            <field name="res_model">thesis.project</field>
-            <field name="view_mode">list,form</field>
-            <field name="context">
+    <!-- Phân công theo giảng viên -->
+    <record id="action_thesis_project_by_supervisor" model="ir.actions.act_window">
+        <field name="name">Phân công theo giảng viên</field>
+        <field name="res_model">thesis.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">
                 {
                     'search_default_group_by_supervisor': 1
                 }
-            </field>
-        </record>
+        </field>
+    </record>
 
-        <!-- Hồ sơ chưa có giảng viên hướng dẫn -->
-        <record id="action_thesis_project_unassigned" model="ir.actions.act_window">
-            <field name="name">Chưa phân công GVHD</field>
-            <field name="res_model">thesis.project</field>
-            <field name="view_mode">list,form</field>
-            <field name="domain">
+    <!-- Hồ sơ chưa có giảng viên hướng dẫn -->
+    <record id="action_thesis_project_unassigned" model="ir.actions.act_window">
+        <field name="name">Chưa phân công GVHD</field>
+        <field name="res_model">thesis.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">
                 [
                     ('supervisor_id', '=', False),
                     ('status', 'not in', ['completed', 'cancelled'])
                 ]
-            </field>
-        </record>
+        </field>
+    </record>
 
-        <!-- Theo dõi toàn bộ quy trình -->
-        <record id="action_thesis_project_by_status" model="ir.actions.act_window">
-            <field name="name">Theo dõi quy trình 11 bước</field>
-            <field name="res_model">thesis.project</field>
-            <field name="view_mode">list,form</field>
-            <field name="context">
+    <!-- Theo dõi toàn bộ quy trình -->
+    <record id="action_thesis_project_by_status" model="ir.actions.act_window">
+        <field name="name">Theo dõi quy trình 11 bước</field>
+        <field name="res_model">thesis.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">
                 {
                     'search_default_group_by_status': 1
                 }
-            </field>
-        </record>
+        </field>
+    </record>
 
 
-        <!-- ================================================== -->
-        <!-- MENU QUẢN LÝ VÀ PHÂN CÔNG                           -->
-        <!-- ================================================== -->
+    <!-- ================================================== -->
+    <!-- MENU QUẢN LÝ VÀ PHÂN CÔNG                           -->
+    <!-- ================================================== -->
 
-        <menuitem id="menu_thesis_management" name="Quản lý đồ án" parent="menu_delivery_management" sequence="20" />
+    <menuitem id="menu_thesis_management" name="Quản lý đồ án" parent="menu_delivery_management" sequence="20" />
 
-        <menuitem id="menu_thesis_list" name="Tất cả hồ sơ" parent="menu_thesis_management" action="action_thesis_project" sequence="10" />
+    <menuitem id="menu_thesis_list" name="Tất cả hồ sơ" parent="menu_thesis_management" action="action_thesis_project" sequence="10" />
 
-        <menuitem id="menu_thesis_by_class" name="Phân công theo lớp" parent="menu_thesis_management" action="action_thesis_project_by_class" sequence="20" />
+    <menuitem id="menu_thesis_by_class" name="Phân công theo lớp" parent="menu_thesis_management" action="action_thesis_project_by_class" sequence="20" />
 
-        <menuitem id="menu_thesis_by_supervisor" name="Phân công theo giảng viên" parent="menu_thesis_management" action="action_thesis_project_by_supervisor" sequence="30" />
+    <menuitem id="menu_thesis_by_supervisor" name="Phân công theo giảng viên" parent="menu_thesis_management" action="action_thesis_project_by_supervisor" sequence="30" />
 
-        <menuitem id="menu_thesis_unassigned" name="Chưa phân công GVHD" parent="menu_thesis_management" action="action_thesis_project_unassigned" sequence="40" />
+    <menuitem id="menu_thesis_unassigned" name="Chưa phân công GVHD" parent="menu_thesis_management" action="action_thesis_project_unassigned" sequence="40" />
 
-        <menuitem id="menu_thesis_by_status" name="Theo dõi quy trình 11 bước" parent="menu_thesis_management" action="action_thesis_project_by_status" sequence="50" />
-    </data>
+    <menuitem id="menu_thesis_by_status" name="Theo dõi quy trình 11 bước" parent="menu_thesis_management" action="action_thesis_project_by_status" sequence="50" />
+</data>
 </odoo>

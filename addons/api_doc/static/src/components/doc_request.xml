@@ -22,7 +22,22 @@
                     t-att-disabled="state.exampleLanguage !== 'json'"
                 >
                     <span>Run</span>
-                    <i class="fa fa-play ms-2" aria-hidden="true"></i>
+                    <i class="fa fa-play ms-2" aria-
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    "true"></i>
                 </button>
             </div>
         </div>
