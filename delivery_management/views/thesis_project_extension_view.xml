@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_thesis_project_form_extension_approval" model="ir.ui.view">
+            <field name="name">
+                thesis.project.form.extension.approval
+            </field>
+
+            <field name="model">thesis.project</field>
+
+            <field name="inherit_id" ref="delivery_management.view_thesis_project_form" />
+
+            <field name="arch" type="xml">
+                <!-- Thêm trang đánh giá vào notebook hiện tại -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="Đánh giá bảo vệ">
+                        <group>
+                            <group string="Phân công phản biện">
+                                <field name="reviewer_id" readonly="status not in ['submitted', 'reviewing']" />
+                            </group>
+
+                            <group string="Kết quả đánh giá">
+                                <field name="supervisor_approved" readonly="status != 'reviewing'" />
+
+                                <field name="reviewer_approved" readonly="status != 'reviewing'" />
+
+                                <field name="ready_for_defense" readonly="1" />
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+                <!-- Chỉ hiện nút duyệt khi hai bên đều đồng ý -->
+                <xpath expr="//button[@name='action_approve_defense']" position="attributes">
+                    <attribute name="invisible">
+                        status != 'reviewing' or not ready_for_defense
+                    </attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -3,6 +3,7 @@ from . import delivery_management
 from . import delivery_statistics
 from . import delivery_wizard
 from . import thesis_management
+from . import thesis_project_extension
 from . import thesis_topic
 from . import academic_faculty
 from . import academic_department

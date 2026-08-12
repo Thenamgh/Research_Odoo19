@@ -148,14 +148,31 @@ class ThesisAssignment(models.Model):
     )
 
     student_id = fields.Many2one(
-        "res.partner",
+        comodel_name="thesis.student",
         string="Sinh viên",
         required=True,
-        domain=[("is_student", "=", True)],
+        ondelete="restrict",
+        domain=[
+            ("has_thesis_wish", "=", True),
+            (
+                "state",
+                "in",
+                [
+                    "eligible",
+                    "registered",
+                    "assigned",
+                    "submitted",
+                    "defended",
+                ],
+            ),
+        ],
     )
 
     student_code = fields.Char(
-        string="Mã sinh viên", related="student_id.ref", readonly=True
+        string="Mã sinh viên",
+        related="student_id.student_code",
+        store=True,
+        readonly=True,
     )
 
     assigned_date = fields.Date(

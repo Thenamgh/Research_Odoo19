@@ -1,21 +1,40 @@
-﻿from odoo import models, fields, _
-from odoo.exceptions import UserError
+﻿from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 
 class ThesisStudent(models.Model):
     _name = "thesis.student"
     _description = "Sinh viên làm đồ án"
+
+    # Classical inheritance đối với hai mixin
     _inherit = ["mail.thread", "mail.activity.mixin"]
+
+    # Delegation inheritance:
+    # thesis.student ủy quyền các trường thông tin liên hệ
+    # cho res.partner thông qua partner_id.
+    _inherits = {
+        "res.partner": "partner_id",
+    }
+
     _order = "student_code asc"
     _rec_name = "name"
 
-    name = fields.Char(string="Họ và Tên", required=True, tracking=True)
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Thông tin liên hệ",
+        required=True,
+        ondelete="cascade",
+        index=True,
+        auto_join=True,
+        delegate=True,
+    )
+
     student_code = fields.Char(
         string="Mã Sinh Viên",
         required=True,
         copy=False,
     )
-        # Thông tin cá nhân và đào tạo
+    # Thông tin cá nhân và đào tạo
     date_of_birth = fields.Date(
         string="Ngày sinh",
         tracking=True,
@@ -28,7 +47,7 @@ class ThesisStudent(models.Model):
         ondelete="restrict",
         help="Lớp hành chính hiện tại của sinh viên",
     )
-        # Thông tin đào tạo tự động lấy từ lớp hành chính
+    # Thông tin đào tạo tự động lấy từ lớp hành chính
     major_id = fields.Many2one(
         comodel_name="academic.major",
         string="Ngành đào tạo",
@@ -57,9 +76,7 @@ class ThesisStudent(models.Model):
         string="Lớp (dữ liệu cũ)",
         help="Trường lớp dạng văn bản cũ, tạm giữ để chuyển đổi sang Lớp hành chính.",
     )
-    email = fields.Char(string="Email")
-    phone = fields.Char(string="Số điện thoại")
-
+   
     # Bước 1: Thông tin xét điều kiện làm đồ án
     eligible_date = fields.Date(
         string="Ngày xét điều kiện",
@@ -125,23 +142,41 @@ class ThesisStudent(models.Model):
         string="Trạng thái",
     )
 
-    def action_mark_eligible(self):
+    @api.model_create_multi
+    def create(self, vals_list):
         """
-        Xác nhận sinh viên đủ điều kiện làm đồ án/
+        Khi tạo sinh viên, đồng bộ mã sinh viên sang trường ref
+        của res.partner được tạo thông qua Delegation inheritance.
+        """
+        for vals in vals_list:
+            if vals.get("student_code") and not vals.get("ref"):
+                vals["ref"] = vals["student_code"]
 
-        Khi xác nhận, hệ thống tự động:
-        - Chuyển trạng thái sang 'Đủ điều kiện'
-        - Lưu ngày xét điều kiện
-        - Lưu người xét điều kiện của sinh viên"""
+        return super().create(vals_list)
 
+    def write(self, vals):
+        """
+        Khi mã sinh viên thay đổi, đồng bộ lại res.partner.ref.
+        """
+        result = super().write(vals)
+
+        if "student_code" in vals:
+            for student in self:
+                student.partner_id.ref = student.student_code
+
+        return result
+
+    @api.constrains("name")
+    def _check_student_name(self):
+        """
+        res.partner.name không bắt buộc ở cấp database,
+        nhưng hồ sơ sinh viên bắt buộc phải có họ tên.
+        """
         for student in self:
-            student.write(
-                {
-                    "state": "eligible",
-                    "eligible_date": fields.Date.context_today(student),
-                    "eligible_checked_by": self.env.user.id,
-                }
-            )
+            if not student.name:
+                raise ValidationError(
+                    _("Họ và tên sinh viên không được để trống.")
+                )
 
     def action_register_wish(self):
         """

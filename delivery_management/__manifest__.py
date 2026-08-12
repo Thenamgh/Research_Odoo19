@@ -1,6 +1,6 @@
 {
     'name': 'Delivery Management',
-    'version': '1.0',
+    'version': '19.0.1.1.0',
     'category': 'Inventory',
     'summary': 'Manage product deliveries and receipts',
     'author': 'Odoo Community',
@@ -16,6 +16,7 @@
         'views/lecturer_management_view.xml',  
         'views/student_management.xml',         
         'views/thesis_management_view.xml',
+        'views/thesis_project_extension_view.xml',
         "views/thesis_assignment_import_wizard_view.xml",
         'views/thesis_batch_view.xml',
         'views/thesis_topic_view.xml',

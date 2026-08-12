@@ -39,7 +39,7 @@
                     <sheet>
                         <group>
                             <group string="Thông tin cá nhân">
-                                <field name="name"/>
+                                <field name="name" required="1"/>
                                 <field name="student_code"/>
                                 <field name="class_name"/>
                                 <field name="email"/>
