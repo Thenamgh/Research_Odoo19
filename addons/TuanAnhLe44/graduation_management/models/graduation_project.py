@@ -96,9 +96,7 @@ class GraduationProject(models.Model):
     # ==========================================
     @api.model_create_multi
     def create(self, vals_list):
-        """
-        Tự động sinh mã đồ án khi tạo mới.
-        """
+        "Tự động sinh mã đồ án khi tạo mới"
 
         for vals in vals_list:
 
@@ -108,12 +106,17 @@ class GraduationProject(models.Model):
                 "graduation.project"
             )
 
-        return super().create(vals_list)
+        records = super().create(vals_list)
+
+        print(">>> ORIGINAL: AFTER SUPER")
+
+        return records
+
+    # return super().create(vals_list)
     # ==================================================
     # Demo Environment
     # ==================================================
     def action_demo_env(self):
-
         """ Example 1: Thực hành tìm hiểu Environment."""
 
         print("\n========== ENV ==========")
